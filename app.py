@@ -420,6 +420,14 @@ def inject_css() -> None:
             color: #e5edf7 !important;
         }
 
+        /* restore original visible sidebar style: do not hide Streamlit sidebar or its native collapse arrow */
+        section[data-testid="stSidebar"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
+        div[data-testid="collapsedControl"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="collapsedControl"] {
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: flex !important;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -1309,7 +1317,7 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
     with tab1:
         long = df.melt(id_vars=["fold", "期限"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
         long["指标"] = long["指标"].replace({"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC"})
-        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
         fig.update_yaxes(range=[0, 1])
         fig = plot_layout(fig, height=420)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1325,19 +1333,19 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             "top10_recall": "Top10% 召回率",
         }
         top_metric = st.selectbox("Top-k 指标", list(metric_name_map.keys()), format_func=lambda x: metric_name_map[x])
-        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
         fig = plot_layout(fig, height=400)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         with c2:
-            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1351,7 +1359,7 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             top5_recall=("top5_recall", "mean"),
         )
         fig = go.Figure()
-        for col, name, color in [("pr_auc", "PR-AUC", "#2dd4bf"), ("roc_auc", "ROC-AUC", "#38bdf8"), ("top5_recall", "Top5% 召回率", "#a78bfa")]:
+        for col, name, color in [("pr_auc", "PR-AUC", "#3E6F73"), ("roc_auc", "ROC-AUC", "#526D89"), ("top5_recall", "Top5% 召回率", "#7A669E")]:
             fig.add_trace(go.Scatter(x=stability["fold"], y=stability[col], mode="lines+markers", name=name, line=dict(color=color, width=3), marker=dict(color=color, size=8)))
         fig.update_layout(title="跨 Fold 平均表现稳定性")
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
@@ -1380,7 +1388,7 @@ def render_predictions(pred_df: pd.DataFrame) -> None:
         unsafe_allow_html=True,
     )
     st.markdown("<div class='rank-band'><span></span><span></span><span></span><span></span><span></span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='pill-row'><span class='soft-pill'>青色：Top 1%</span><span class='soft-pill'>蓝色：1–5%</span><span class='soft-pill'>紫色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
+    st.markdown("<div class='pill-row'><span class='soft-pill'>红色：Top 1%</span><span class='soft-pill'>橙色：1–5%</span><span class='soft-pill'>黄色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
 
     top_cols = st.columns([1, 1, 2])
     with top_cols[0]:
