@@ -1,0 +1,42 @@
+{
+  "hazard_e1": {
+    "eta": 0.01,
+    "max_depth": 3,
+    "min_child_weight": 1,
+    "subsample": 0.85,
+    "colsample_bytree": 0.5,
+    "gamma": 0.5,
+    "reg_lambda": 1.0,
+    "reg_alpha": 0.05
+  },
+  "hazard_e2": {
+    "eta": 0.01,
+    "max_depth": 9,
+    "min_child_weight": 5,
+    "subsample": 0.85,
+    "colsample_bytree": 0.9,
+    "gamma": 0.5,
+    "reg_lambda": 16.0,
+    "reg_alpha": 0.2
+  },
+  "hazard_e3": {
+    "eta": 0.02,
+    "max_depth": 3,
+    "min_child_weight": 15,
+    "subsample": 0.9,
+    "colsample_bytree": 0.4,
+    "gamma": 1.0,
+    "reg_lambda": 8.0,
+    "reg_alpha": 0.1
+  },
+  "hazard_e4": {
+    "eta": 0.1,
+    "max_depth": 3,
+    "min_child_weight": 3,
+    "subsample": 0.85,
+    "colsample_bytree": 0.8,
+    "gamma": 0.2,
+    "reg_lambda": 1.0,
+    "reg_alpha": 0.01
+  }
+}
