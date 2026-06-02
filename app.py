@@ -25,6 +25,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+import streamlit.components.v1 as components
 
 # =============================================================================
 # 0. 页面基础配置
@@ -486,6 +487,46 @@ def inject_css() -> None:
             fill: none !important;
         }
 
+
+        /* refined multiselect tags: muted dark, no bright red */
+        .stMultiSelect [data-baseweb="tag"],
+        div[data-baseweb="select"] [data-baseweb="tag"],
+        div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, rgba(30,41,59,.98), rgba(17,31,51,.98)) !important;
+            border: 1px solid rgba(100,116,139,.55) !important;
+            border-radius: 10px !important;
+            box-shadow: none !important;
+        }
+        .stMultiSelect [data-baseweb="tag"] *,
+        div[data-baseweb="select"] [data-baseweb="tag"] *,
+        div[data-baseweb="tag"] * {
+            color: #dbeafe !important;
+            -webkit-text-fill-color: #dbeafe !important;
+            fill: #b6c7df !important;
+        }
+        .stMultiSelect [data-baseweb="tag"] svg,
+        div[data-baseweb="tag"] svg {
+            color: #b6c7df !important;
+            fill: #b6c7df !important;
+        }
+        .stMultiSelect [data-baseweb="tag"]:hover {
+            border-color: rgba(35,211,195,.45) !important;
+            background: linear-gradient(135deg, rgba(36,54,78,.98), rgba(20,37,60,.98)) !important;
+        }
+
+        /* keep the native sidebar collapse button usable */
+        button[aria-label*="Collapse"], button[aria-label*="collapse"],
+        button[aria-label*="Open"], button[aria-label*="open"],
+        button[title*="Collapse"], button[title*="Open"],
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebarCollapsedControl"],
+        [data-testid="collapsedControl"] {
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            z-index: 2147483647 !important;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
@@ -494,6 +535,124 @@ def inject_css() -> None:
 # =============================================================================
 # 3. 工具函数
 # =============================================================================
+
+
+def inject_sidebar_reopen_control() -> None:
+    """在侧边栏被折叠后保留一条可点击的展开小条。"""
+    components.html(
+        """
+        <script>
+        (function() {
+          const doc = window.parent.document;
+          if (doc.getElementById("custom-sidebar-reopen-style")) return;
+
+          const style = doc.createElement("style");
+          style.id = "custom-sidebar-reopen-style";
+          style.innerHTML = `
+            #custom-sidebar-reopen-rail {
+              position: fixed;
+              left: 0;
+              top: 96px;
+              width: 38px;
+              height: 92px;
+              z-index: 2147483647;
+              display: none;
+              align-items: center;
+              justify-content: center;
+              background: linear-gradient(180deg, rgba(8,17,31,.98), rgba(13,21,37,.98));
+              border: 1px solid rgba(35,211,195,.34);
+              border-left: none;
+              border-radius: 0 14px 14px 0;
+              box-shadow: 0 12px 30px rgba(0,0,0,.40);
+              color: #7df5e8;
+              font-size: 25px;
+              font-weight: 900;
+              cursor: pointer;
+              backdrop-filter: blur(10px);
+            }
+            #custom-sidebar-reopen-rail:hover {
+              background: linear-gradient(180deg, rgba(14,30,50,.99), rgba(18,35,56,.99));
+              color: #ffffff;
+              border-color: rgba(35,211,195,.62);
+              transform: translateX(1px);
+            }
+          `;
+          doc.head.appendChild(style);
+
+          const rail = doc.createElement("button");
+          rail.id = "custom-sidebar-reopen-rail";
+          rail.type = "button";
+          rail.title = "展开侧边栏";
+          rail.setAttribute("aria-label", "展开侧边栏");
+          rail.innerHTML = "›";
+          doc.body.appendChild(rail);
+
+          function getSidebar() {
+            return doc.querySelector('section[data-testid="stSidebar"]');
+          }
+
+          function isSidebarExpanded() {
+            const sb = getSidebar();
+            if (!sb) return false;
+            const r = sb.getBoundingClientRect();
+            const aria = sb.getAttribute("aria-expanded");
+            return aria !== "false" && r.width > 80 && r.right > 80;
+          }
+
+          function findNativeOpenButton() {
+            const selectors = [
+              '[data-testid="stSidebarCollapsedControl"] button',
+              'button[data-testid="stSidebarCollapsedControl"]',
+              '[data-testid="collapsedControl"] button',
+              'button[data-testid="collapsedControl"]',
+              'button[aria-label*="Open"]',
+              'button[aria-label*="open"]',
+              'button[title*="Open"]',
+              'button[title*="open"]',
+              'button[aria-label*="sidebar"]',
+              'button[title*="sidebar"]'
+            ];
+            for (const sel of selectors) {
+              const el = doc.querySelector(sel);
+              if (el) return el;
+            }
+            const buttons = Array.from(doc.querySelectorAll("button"));
+            return buttons.find(b => {
+              const label = ((b.getAttribute("aria-label") || "") + " " + (b.getAttribute("title") || "") + " " + (b.innerText || "")).toLowerCase();
+              return label.includes("open") || label.includes("sidebar") || label.includes("展开");
+            });
+          }
+
+          rail.addEventListener("click", function() {
+            const btn = findNativeOpenButton();
+            if (btn) {
+              btn.click();
+            } else {
+              const sb = getSidebar();
+              if (sb) {
+                sb.style.transform = "translateX(0px)";
+                sb.style.visibility = "visible";
+                sb.style.display = "block";
+                sb.style.width = "18rem";
+                sb.setAttribute("aria-expanded", "true");
+              }
+            }
+            setTimeout(updateRail, 300);
+          });
+
+          function updateRail() {
+            rail.style.display = isSidebarExpanded() ? "none" : "flex";
+          }
+
+          setInterval(updateRail, 450);
+          updateRail();
+        })();
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
+
 
 def pct(x: Optional[float], digits: int = 2) -> str:
     if x is None or pd.isna(x):
@@ -635,6 +794,7 @@ def plot_layout(fig: go.Figure, height: int = 360) -> go.Figure:
     fig.update_layout(
         height=height,
         template="plotly_dark",
+        colorway=["#2F5F64", "#3E526C", "#5E5278", "#7A6B52", "#64748B"],
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(color="#dbeafe"),
@@ -1375,7 +1535,7 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
     with tab1:
         long = df.melt(id_vars=["fold", "期限"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
         long["指标"] = long["指标"].replace({"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC"})
-        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
+        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#2F5F64", "Fold2": "#3E526C", "Fold3": "#5E5278"})
         fig.update_yaxes(range=[0, 1])
         fig = plot_layout(fig, height=420)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1391,19 +1551,19 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             "top10_recall": "Top10% 召回率",
         }
         top_metric = st.selectbox("Top-k 指标", list(metric_name_map.keys()), format_func=lambda x: metric_name_map[x])
-        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
+        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#2F5F64", "Fold2": "#3E526C", "Fold3": "#5E5278"})
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
         fig = plot_layout(fig, height=400)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
+            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#2F5F64", "Fold2": "#3E526C", "Fold3": "#5E5278"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         with c2:
-            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
+            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#2F5F64", "Fold2": "#3E526C", "Fold3": "#5E5278"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1890,6 +2050,7 @@ def render_cover_page() -> None:
 
 def main() -> None:
     inject_css()
+    inject_sidebar_reopen_control()
 
     if "entered_app" not in st.session_state:
         st.session_state["entered_app"] = False
