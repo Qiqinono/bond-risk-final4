@@ -107,7 +107,7 @@ def inject_css() -> None:
             --danger: #ef4444;
         }
         .stApp { background: radial-gradient(circle at 12% 8%, #12213b 0, #080d18 28%, #060914 100%); color: var(--text); }
-        header[data-testid="stHeader"] { background: transparent !important; height: 0 !important; min-height: 0 !important; }
+        header[data-testid="stHeader"] { display: none !important; }
         div[data-testid="stToolbar"] { visibility: hidden !important; height: 0 !important; position: fixed !important; }
         #MainMenu { visibility: hidden !important; }
         footer { visibility: hidden !important; }
@@ -166,9 +166,9 @@ def inject_css() -> None:
         }
         .badge-green { background: rgba(35, 211, 195, .14); color: #55f0de; }
         .badge-purple { background: rgba(124, 58, 237, .16); color: #c4b5fd; }
-        .bucket-top1 { background: rgba(239, 68, 68, .20); color: #fecaca; }
-        .bucket-top5 { background: rgba(249, 115, 22, .20); color: #fed7aa; }
-        .bucket-top10 { background: rgba(245, 158, 11, .18); color: #fde68a; }
+        .bucket-top1 { background: rgba(34, 211, 238, .18); color: #a5f3fc; }
+        .bucket-top5 { background: rgba(56, 189, 248, .18); color: #bae6fd; }
+        .bucket-top10 { background: rgba(167, 139, 250, .18); color: #ddd6fe; }
         .bucket-top20 { background: rgba(34, 197, 94, .15); color: #bbf7d0; }
         .bucket-other { background: rgba(148, 163, 184, .12); color: #cbd5e1; }
         div[data-testid="stDataFrame"] { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: rgba(15,23,42,.82) !important; }
@@ -259,7 +259,7 @@ def inject_css() -> None:
         .glossary-card b { color:#55f0de; }
         .glossary-card p { color:#9fb0c6; font-size:.82rem; line-height:1.62; margin:6px 0 0 0; }
         .rank-band { height:8px; border-radius:999px; overflow:hidden; display:flex; margin-top:10px; border:1px solid rgba(255,255,255,.08); }
-        .rank-band span:nth-child(1){background:#ef4444;width:1%}.rank-band span:nth-child(2){background:#f97316;width:4%}.rank-band span:nth-child(3){background:#f59e0b;width:5%}.rank-band span:nth-child(4){background:#22c55e;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
+        .rank-band span:nth-child(1){background:#22d3ee;width:1%}.rank-band span:nth-child(2){background:#38bdf8;width:4%}.rank-band span:nth-child(3){background:#a78bfa;width:5%}.rank-band span:nth-child(4){background:#34d399;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
 
         /* Sidebar file path input: keep dark style, unlike main query input */
         section[data-testid="stSidebar"] div[data-testid="stTextInput"] div[data-baseweb="input"] {
@@ -420,70 +420,12 @@ def inject_css() -> None:
             color: #e5edf7 !important;
         }
 
-
-        /* final color adjustment: muted tags and charts, keep risk band classic red/orange/yellow/green */
-        [data-baseweb="tag"], span[data-baseweb="tag"], div[data-baseweb="tag"] {
-            background: linear-gradient(135deg, rgba(33,52,76,.96), rgba(25,41,62,.96)) !important;
-            border: 1px solid rgba(125,154,188,.35) !important;
-            box-shadow: none !important;
-            color: #dbeafe !important;
-        }
-        [data-baseweb="tag"] *, span[data-baseweb="tag"] *, div[data-baseweb="tag"] * {
-            color: #dbeafe !important;
-            -webkit-text-fill-color: #dbeafe !important;
-            fill: #b6c7df !important;
-        }
-        [data-baseweb="tag"] svg, span[data-baseweb="tag"] svg, div[data-baseweb="tag"] svg {
-            color: #b6c7df !important;
-            fill: #b6c7df !important;
-        }
-        [data-baseweb="tag"] button, span[data-baseweb="tag"] button, div[data-baseweb="tag"] button {
-            background: transparent !important;
-        }
-        .rank-band span:nth-child(1){background:#ef4444 !important;width:1%}
-        .rank-band span:nth-child(2){background:#f97316 !important;width:4%}
-        .rank-band span:nth-child(3){background:#f59e0b !important;width:5%}
-        .rank-band span:nth-child(4){background:#22c55e !important;width:10%}
-        .rank-band span:nth-child(5){background:#64748b !important;width:80%}
-        .bucket-top1 { background: rgba(239, 68, 68, .20) !important; color: #fecaca !important; }
-        .bucket-top5 { background: rgba(249, 115, 22, .20) !important; color: #fed7aa !important; }
-        .bucket-top10 { background: rgba(245, 158, 11, .18) !important; color: #fde68a !important; }
-
-        /* keep sidebar expand control visible after collapsing */
-        header[data-testid="stHeader"] {
-            display: block !important;
-            background: transparent !important;
-            pointer-events: none !important;
-            height: 0 !important;
-            min-height: 0 !important;
-        }
-        header[data-testid="stHeader"] * { pointer-events: auto !important; }
-        div[data-testid="collapsedControl"],
-        div[data-testid="stSidebarCollapsedControl"],
-        button[data-testid="collapsedControl"],
-        button[kind="header"],
-        button[data-testid="stBaseButton-headerNoPadding"],
-        button[data-testid="stBaseButton-header"] {
+        /* restore original visible sidebar style: do not hide Streamlit sidebar or its native collapse arrow */
+        section[data-testid="stSidebar"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
+        div[data-testid="collapsedControl"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="collapsedControl"] {
             visibility: visible !important;
             opacity: 1 !important;
             display: flex !important;
-            z-index: 2147483647 !important;
-            pointer-events: auto !important;
-            background: rgba(15,23,42,.94) !important;
-            border: 1px solid rgba(35,211,195,.34) !important;
-            border-radius: 12px !important;
-            color: #e5edf7 !important;
-            box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
-        }
-        div[data-testid="collapsedControl"] svg,
-        div[data-testid="stSidebarCollapsedControl"] svg,
-        button[data-testid="collapsedControl"] svg,
-        button[kind="header"] svg,
-        button[data-testid="stBaseButton-headerNoPadding"] svg,
-        button[data-testid="stBaseButton-header"] svg {
-            color: #e5edf7 !important;
-            stroke: #e5edf7 !important;
-            fill: none !important;
         }
 
         </style>
