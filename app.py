@@ -166,9 +166,9 @@ def inject_css() -> None:
         }
         .badge-green { background: rgba(35, 211, 195, .14); color: #55f0de; }
         .badge-purple { background: rgba(124, 58, 237, .16); color: #c4b5fd; }
-        .bucket-top1 { background: rgba(239, 68, 68, .20); color: #fecaca; }
-        .bucket-top5 { background: rgba(249, 115, 22, .20); color: #fed7aa; }
-        .bucket-top10 { background: rgba(245, 158, 11, .18); color: #fde68a; }
+        .bucket-top1 { background: rgba(34, 211, 238, .18); color: #a5f3fc; }
+        .bucket-top5 { background: rgba(56, 189, 248, .18); color: #bae6fd; }
+        .bucket-top10 { background: rgba(167, 139, 250, .18); color: #ddd6fe; }
         .bucket-top20 { background: rgba(34, 197, 94, .15); color: #bbf7d0; }
         .bucket-other { background: rgba(148, 163, 184, .12); color: #cbd5e1; }
         div[data-testid="stDataFrame"] { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: rgba(15,23,42,.82) !important; }
@@ -259,7 +259,7 @@ def inject_css() -> None:
         .glossary-card b { color:#55f0de; }
         .glossary-card p { color:#9fb0c6; font-size:.82rem; line-height:1.62; margin:6px 0 0 0; }
         .rank-band { height:8px; border-radius:999px; overflow:hidden; display:flex; margin-top:10px; border:1px solid rgba(255,255,255,.08); }
-        .rank-band span:nth-child(1){background:#ef4444;width:1%}.rank-band span:nth-child(2){background:#f97316;width:4%}.rank-band span:nth-child(3){background:#f59e0b;width:5%}.rank-band span:nth-child(4){background:#22c55e;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
+        .rank-band span:nth-child(1){background:#22d3ee;width:1%}.rank-band span:nth-child(2){background:#38bdf8;width:4%}.rank-band span:nth-child(3){background:#a78bfa;width:5%}.rank-band span:nth-child(4){background:#34d399;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
 
         /* Sidebar file path input: keep dark style, unlike main query input */
         section[data-testid="stSidebar"] div[data-testid="stTextInput"] div[data-baseweb="input"] {
@@ -359,6 +359,66 @@ def inject_css() -> None:
         }
         .sidebar-brand-title { font-size:1.18rem;font-weight:900;color:#f8fbff;line-height:1.15; }
         .sidebar-brand-sub { color:#94a3b8;font-size:.78rem;margin-top:4px; }
+
+
+        /* UI final polish: sidebar, inputs, multiselect tags, collapsed control */
+        section[data-testid="stSidebar"] [role="radiogroup"] label {
+            width: 100% !important;
+            min-height: 50px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label p {
+            width: 100% !important;
+            white-space: nowrap !important;
+            line-height: 1.2 !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+            border-left: 4px solid #23d3c3 !important;
+            background: linear-gradient(90deg, rgba(35,211,195,.18), rgba(59,130,246,.12)) !important;
+            box-shadow: inset 0 0 0 1px rgba(35,211,195,.12), 0 8px 24px rgba(0,0,0,.16) !important;
+        }
+        div[data-testid="collapsedControl"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="collapsedControl"] {
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: flex !important;
+            z-index: 999999 !important;
+            background: rgba(15,23,42,.92) !important;
+            border: 1px solid rgba(35,211,195,.35) !important;
+            border-radius: 12px !important;
+            color: #e5edf7 !important;
+            box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+        }
+        div[data-testid="stTextInput"] div[data-baseweb="input"],
+        div[data-testid="stNumberInput"] div[data-baseweb="input"] {
+            background: rgba(15,23,42,.92) !important;
+            border: 1px solid rgba(148,163,184,.24) !important;
+            border-radius: 12px !important;
+        }
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input {
+            background: rgba(15,23,42,.92) !important;
+            color: #e5edf7 !important;
+            -webkit-text-fill-color: #e5edf7 !important;
+            caret-color: #55f0de !important;
+        }
+        div[data-testid="stTextInput"] input::placeholder,
+        div[data-testid="stNumberInput"] input::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+        div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, rgba(35,211,195,.22), rgba(59,130,246,.18)) !important;
+            border: 1px solid rgba(35,211,195,.32) !important;
+            color: #e5edf7 !important;
+        }
+        div[data-baseweb="tag"] span { color: #e5edf7 !important; }
+        div[data-baseweb="tag"] svg { color: #a7f3d0 !important; fill: #a7f3d0 !important; }
+        div[data-baseweb="popover"] ul, div[data-baseweb="popover"] li {
+            background: #0f172a !important;
+            color: #e5edf7 !important;
+        }
 
         </style>
         """,
@@ -1243,13 +1303,13 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
         default=["Fold1", "Fold2", "Fold3"],
     )
     df = metrics_df[metrics_df["horizon"].isin(selected_horizons) & metrics_df["fold"].isin(selected_folds)].copy()
-    df["期限中文"] = df["horizon"].map({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
+    df["期限"] = df["horizon"].map({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
 
     tab1, tab2, tab3, tab4 = st.tabs(["区分能力", "Top-k 捕获", "稳定性", "明细表"])
     with tab1:
-        long = df.melt(id_vars=["fold", "期限中文"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
+        long = df.melt(id_vars=["fold", "期限"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
         long["指标"] = long["指标"].replace({"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC"})
-        fig = px.bar(long, x="期限中文", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力")
+        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
         fig.update_yaxes(range=[0, 1])
         fig = plot_layout(fig, height=420)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1265,19 +1325,19 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             "top10_recall": "Top10% 召回率",
         }
         top_metric = st.selectbox("Top-k 指标", list(metric_name_map.keys()), format_func=lambda x: metric_name_map[x])
-        fig = px.bar(df, x="期限中文", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比")
+        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
         fig = plot_layout(fig, height=400)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.line(df, x="期限中文", y="top5_precision", color="fold", markers=True, title="Top5% 精确率")
+            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         with c2:
-            fig = px.line(df, x="期限中文", y="top5_recall", color="fold", markers=True, title="Top5% 召回率")
+            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1291,8 +1351,8 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             top5_recall=("top5_recall", "mean"),
         )
         fig = go.Figure()
-        for col, name in [("pr_auc", "PR-AUC"), ("roc_auc", "ROC-AUC"), ("top5_recall", "Top5% 召回率")]:
-            fig.add_trace(go.Scatter(x=stability["fold"], y=stability[col], mode="lines+markers", name=name))
+        for col, name, color in [("pr_auc", "PR-AUC", "#2dd4bf"), ("roc_auc", "ROC-AUC", "#38bdf8"), ("top5_recall", "Top5% 召回率", "#a78bfa")]:
+            fig.add_trace(go.Scatter(x=stability["fold"], y=stability[col], mode="lines+markers", name=name, line=dict(color=color, width=3), marker=dict(color=color, size=8)))
         fig.update_layout(title="跨 Fold 平均表现稳定性")
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
         fig = plot_layout(fig, height=380)
@@ -1305,8 +1365,8 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
         st.markdown("#### Fold 时间窗口划分")
         dark_table(fold_schedule, max_height=180)
         st.markdown("#### 指标明细")
-        dark_table(format_metric_table(df.drop(columns=["期限中文"], errors="ignore")), max_height=520)
-        csv = df.drop(columns=["horizon_order", "期限中文"], errors="ignore").to_csv(index=False, encoding="utf-8-sig")
+        dark_table(format_metric_table(df.drop(columns=["期限"], errors="ignore")), max_height=520)
+        csv = df.drop(columns=["horizon_order", "期限"], errors="ignore").to_csv(index=False, encoding="utf-8-sig")
         st.download_button("下载 Fold 测试集指标 CSV", data=csv, file_name="fold_test_metrics.csv", mime="text/csv")
 
 
@@ -1320,7 +1380,7 @@ def render_predictions(pred_df: pd.DataFrame) -> None:
         unsafe_allow_html=True,
     )
     st.markdown("<div class='rank-band'><span></span><span></span><span></span><span></span><span></span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='pill-row'><span class='soft-pill'>红色：Top 1%</span><span class='soft-pill'>橙色：1–5%</span><span class='soft-pill'>黄色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
+    st.markdown("<div class='pill-row'><span class='soft-pill'>青色：Top 1%</span><span class='soft-pill'>蓝色：1–5%</span><span class='soft-pill'>紫色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
 
     top_cols = st.columns([1, 1, 2])
     with top_cols[0]:
@@ -1682,7 +1742,7 @@ def format_metric_table(df: pd.DataFrame) -> pd.DataFrame:
         "top10_precision": "Top10% P",
         "top10_recall": "Top10% R",
     }
-    out = out.drop(columns=["horizon_order", "note", "期限中文"], errors="ignore")
+    out = out.drop(columns=["horizon_order", "note"], errors="ignore")
     out = out.rename(columns=rename)
     if "期限" in out.columns:
         out["期限"] = out["期限"].replace({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
