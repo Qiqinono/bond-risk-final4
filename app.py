@@ -486,39 +486,6 @@ def inject_css() -> None:
             fill: none !important;
         }
 
-
-        /* Disable sidebar collapsing: keep the original sidebar fixed and remove the left-collapse arrow */
-        header[data-testid="stHeader"] {
-            display: none !important;
-            height: 0 !important;
-            min-height: 0 !important;
-        }
-        div[data-testid="collapsedControl"],
-        div[data-testid="stSidebarCollapsedControl"],
-        button[data-testid="collapsedControl"],
-        button[data-testid="stSidebarCollapseButton"],
-        button[kind="header"],
-        button[data-testid="stBaseButton-headerNoPadding"],
-        button[data-testid="stBaseButton-header"],
-        button[aria-label*="Collapse"],
-        button[aria-label*="collapse"],
-        button[aria-label*="Close sidebar"],
-        button[title*="Collapse"],
-        button[title*="collapse"],
-        button[title*="Close sidebar"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            min-width: 0 !important;
-            min-height: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: 0 !important;
-        }
-
         </style>
         """,
         unsafe_allow_html=True,
