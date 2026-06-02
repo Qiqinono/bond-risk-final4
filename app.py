@@ -107,7 +107,7 @@ def inject_css() -> None:
             --danger: #ef4444;
         }
         .stApp { background: radial-gradient(circle at 12% 8%, #12213b 0, #080d18 28%, #060914 100%); color: var(--text); }
-        header[data-testid="stHeader"] { display: none !important; }
+        header[data-testid="stHeader"] { background: transparent !important; height: 0 !important; min-height: 0 !important; }
         div[data-testid="stToolbar"] { visibility: hidden !important; height: 0 !important; position: fixed !important; }
         #MainMenu { visibility: hidden !important; }
         footer { visibility: hidden !important; }
@@ -166,9 +166,9 @@ def inject_css() -> None:
         }
         .badge-green { background: rgba(35, 211, 195, .14); color: #55f0de; }
         .badge-purple { background: rgba(124, 58, 237, .16); color: #c4b5fd; }
-        .bucket-top1 { background: rgba(34, 211, 238, .18); color: #a5f3fc; }
-        .bucket-top5 { background: rgba(56, 189, 248, .18); color: #bae6fd; }
-        .bucket-top10 { background: rgba(167, 139, 250, .18); color: #ddd6fe; }
+        .bucket-top1 { background: rgba(239, 68, 68, .20); color: #fecaca; }
+        .bucket-top5 { background: rgba(249, 115, 22, .20); color: #fed7aa; }
+        .bucket-top10 { background: rgba(245, 158, 11, .18); color: #fde68a; }
         .bucket-top20 { background: rgba(34, 197, 94, .15); color: #bbf7d0; }
         .bucket-other { background: rgba(148, 163, 184, .12); color: #cbd5e1; }
         div[data-testid="stDataFrame"] { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: rgba(15,23,42,.82) !important; }
@@ -259,7 +259,7 @@ def inject_css() -> None:
         .glossary-card b { color:#55f0de; }
         .glossary-card p { color:#9fb0c6; font-size:.82rem; line-height:1.62; margin:6px 0 0 0; }
         .rank-band { height:8px; border-radius:999px; overflow:hidden; display:flex; margin-top:10px; border:1px solid rgba(255,255,255,.08); }
-        .rank-band span:nth-child(1){background:#22d3ee;width:1%}.rank-band span:nth-child(2){background:#38bdf8;width:4%}.rank-band span:nth-child(3){background:#a78bfa;width:5%}.rank-band span:nth-child(4){background:#34d399;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
+        .rank-band span:nth-child(1){background:#ef4444;width:1%}.rank-band span:nth-child(2){background:#f97316;width:4%}.rank-band span:nth-child(3){background:#f59e0b;width:5%}.rank-band span:nth-child(4){background:#22c55e;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
 
         /* Sidebar file path input: keep dark style, unlike main query input */
         section[data-testid="stSidebar"] div[data-testid="stTextInput"] div[data-baseweb="input"] {
@@ -418,6 +418,72 @@ def inject_css() -> None:
         div[data-baseweb="popover"] ul, div[data-baseweb="popover"] li {
             background: #0f172a !important;
             color: #e5edf7 !important;
+        }
+
+
+        /* final color adjustment: muted tags and charts, keep risk band classic red/orange/yellow/green */
+        [data-baseweb="tag"], span[data-baseweb="tag"], div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, rgba(33,52,76,.96), rgba(25,41,62,.96)) !important;
+            border: 1px solid rgba(125,154,188,.35) !important;
+            box-shadow: none !important;
+            color: #dbeafe !important;
+        }
+        [data-baseweb="tag"] *, span[data-baseweb="tag"] *, div[data-baseweb="tag"] * {
+            color: #dbeafe !important;
+            -webkit-text-fill-color: #dbeafe !important;
+            fill: #b6c7df !important;
+        }
+        [data-baseweb="tag"] svg, span[data-baseweb="tag"] svg, div[data-baseweb="tag"] svg {
+            color: #b6c7df !important;
+            fill: #b6c7df !important;
+        }
+        [data-baseweb="tag"] button, span[data-baseweb="tag"] button, div[data-baseweb="tag"] button {
+            background: transparent !important;
+        }
+        .rank-band span:nth-child(1){background:#ef4444 !important;width:1%}
+        .rank-band span:nth-child(2){background:#f97316 !important;width:4%}
+        .rank-band span:nth-child(3){background:#f59e0b !important;width:5%}
+        .rank-band span:nth-child(4){background:#22c55e !important;width:10%}
+        .rank-band span:nth-child(5){background:#64748b !important;width:80%}
+        .bucket-top1 { background: rgba(239, 68, 68, .20) !important; color: #fecaca !important; }
+        .bucket-top5 { background: rgba(249, 115, 22, .20) !important; color: #fed7aa !important; }
+        .bucket-top10 { background: rgba(245, 158, 11, .18) !important; color: #fde68a !important; }
+
+        /* keep sidebar expand control visible after collapsing */
+        header[data-testid="stHeader"] {
+            display: block !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            height: 0 !important;
+            min-height: 0 !important;
+        }
+        header[data-testid="stHeader"] * { pointer-events: auto !important; }
+        div[data-testid="collapsedControl"],
+        div[data-testid="stSidebarCollapsedControl"],
+        button[data-testid="collapsedControl"],
+        button[kind="header"],
+        button[data-testid="stBaseButton-headerNoPadding"],
+        button[data-testid="stBaseButton-header"] {
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: flex !important;
+            z-index: 2147483647 !important;
+            pointer-events: auto !important;
+            background: rgba(15,23,42,.94) !important;
+            border: 1px solid rgba(35,211,195,.34) !important;
+            border-radius: 12px !important;
+            color: #e5edf7 !important;
+            box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+        }
+        div[data-testid="collapsedControl"] svg,
+        div[data-testid="stSidebarCollapsedControl"] svg,
+        button[data-testid="collapsedControl"] svg,
+        button[kind="header"] svg,
+        button[data-testid="stBaseButton-headerNoPadding"] svg,
+        button[data-testid="stBaseButton-header"] svg {
+            color: #e5edf7 !important;
+            stroke: #e5edf7 !important;
+            fill: none !important;
         }
 
         </style>
@@ -1309,7 +1375,7 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
     with tab1:
         long = df.melt(id_vars=["fold", "期限"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
         long["指标"] = long["指标"].replace({"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC"})
-        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+        fig = px.bar(long, x="期限", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
         fig.update_yaxes(range=[0, 1])
         fig = plot_layout(fig, height=420)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1325,19 +1391,19 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             "top10_recall": "Top10% 召回率",
         }
         top_metric = st.selectbox("Top-k 指标", list(metric_name_map.keys()), format_func=lambda x: metric_name_map[x])
-        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+        fig = px.bar(df, x="期限", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
         fig = plot_layout(fig, height=400)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+            fig = px.line(df, x="期限", y="top5_precision", color="fold", markers=True, title="Top5% 精确率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         with c2:
-            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#2dd4bf", "Fold2": "#38bdf8", "Fold3": "#a78bfa"})
+            fig = px.line(df, x="期限", y="top5_recall", color="fold", markers=True, title="Top5% 召回率", color_discrete_map={"Fold1": "#3E6F73", "Fold2": "#526D89", "Fold3": "#7A669E"})
             fig.update_yaxes(range=[0, 1], tickformat=".0%")
             fig = plot_layout(fig, height=330)
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -1351,7 +1417,7 @@ def render_validation(metrics_df: pd.DataFrame) -> None:
             top5_recall=("top5_recall", "mean"),
         )
         fig = go.Figure()
-        for col, name, color in [("pr_auc", "PR-AUC", "#2dd4bf"), ("roc_auc", "ROC-AUC", "#38bdf8"), ("top5_recall", "Top5% 召回率", "#a78bfa")]:
+        for col, name, color in [("pr_auc", "PR-AUC", "#3E6F73"), ("roc_auc", "ROC-AUC", "#526D89"), ("top5_recall", "Top5% 召回率", "#7A669E")]:
             fig.add_trace(go.Scatter(x=stability["fold"], y=stability[col], mode="lines+markers", name=name, line=dict(color=color, width=3), marker=dict(color=color, size=8)))
         fig.update_layout(title="跨 Fold 平均表现稳定性")
         fig.update_yaxes(range=[0, 1], tickformat=".0%")
@@ -1380,7 +1446,7 @@ def render_predictions(pred_df: pd.DataFrame) -> None:
         unsafe_allow_html=True,
     )
     st.markdown("<div class='rank-band'><span></span><span></span><span></span><span></span><span></span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='pill-row'><span class='soft-pill'>青色：Top 1%</span><span class='soft-pill'>蓝色：1–5%</span><span class='soft-pill'>紫色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
+    st.markdown("<div class='pill-row'><span class='soft-pill'>红色：Top 1%</span><span class='soft-pill'>橙色：1–5%</span><span class='soft-pill'>黄色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
 
     top_cols = st.columns([1, 1, 2])
     with top_cols[0]:
