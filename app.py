@@ -166,9 +166,9 @@ def inject_css() -> None:
         }
         .badge-green { background: rgba(35, 211, 195, .14); color: #55f0de; }
         .badge-purple { background: rgba(124, 58, 237, .16); color: #c4b5fd; }
-        .bucket-top1 { background: rgba(239, 68, 68, .20); color: #fecaca; }
-        .bucket-top5 { background: rgba(249, 115, 22, .20); color: #fed7aa; }
-        .bucket-top10 { background: rgba(245, 158, 11, .18); color: #fde68a; }
+        .bucket-top1 { background: rgba(34, 211, 238, .18); color: #a5f3fc; }
+        .bucket-top5 { background: rgba(56, 189, 248, .18); color: #bae6fd; }
+        .bucket-top10 { background: rgba(167, 139, 250, .18); color: #ddd6fe; }
         .bucket-top20 { background: rgba(34, 197, 94, .15); color: #bbf7d0; }
         .bucket-other { background: rgba(148, 163, 184, .12); color: #cbd5e1; }
         div[data-testid="stDataFrame"] { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: rgba(15,23,42,.82) !important; }
@@ -259,7 +259,7 @@ def inject_css() -> None:
         .glossary-card b { color:#55f0de; }
         .glossary-card p { color:#9fb0c6; font-size:.82rem; line-height:1.62; margin:6px 0 0 0; }
         .rank-band { height:8px; border-radius:999px; overflow:hidden; display:flex; margin-top:10px; border:1px solid rgba(255,255,255,.08); }
-        .rank-band span:nth-child(1){background:#ef4444;width:1%}.rank-band span:nth-child(2){background:#f97316;width:4%}.rank-band span:nth-child(3){background:#f59e0b;width:5%}.rank-band span:nth-child(4){background:#22c55e;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
+        .rank-band span:nth-child(1){background:#ef4444;width:1%}.rank-band span:nth-child(2){background:#f97316;width:4%}.rank-band span:nth-child(3){background:#eab308;width:5%}.rank-band span:nth-child(4){background:#22c55e;width:10%}.rank-band span:nth-child(5){background:#64748b;width:80%}
 
         /* Sidebar file path input: keep dark style, unlike main query input */
         section[data-testid="stSidebar"] div[data-testid="stTextInput"] div[data-baseweb="input"] {
@@ -359,6 +359,164 @@ def inject_css() -> None:
         }
         .sidebar-brand-title { font-size:1.18rem;font-weight:900;color:#f8fbff;line-height:1.15; }
         .sidebar-brand-sub { color:#94a3b8;font-size:.78rem;margin-top:4px; }
+
+
+        /* UI final polish: sidebar, inputs, multiselect tags, collapsed control */
+        section[data-testid="stSidebar"] [role="radiogroup"] label {
+            width: 100% !important;
+            min-height: 50px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label p {
+            width: 100% !important;
+            white-space: nowrap !important;
+            line-height: 1.2 !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+            border-left: 4px solid #23d3c3 !important;
+            background: linear-gradient(90deg, rgba(35,211,195,.18), rgba(59,130,246,.12)) !important;
+            box-shadow: inset 0 0 0 1px rgba(35,211,195,.12), 0 8px 24px rgba(0,0,0,.16) !important;
+        }
+        div[data-testid="collapsedControl"], div[data-testid="stSidebarCollapsedControl"], button[data-testid="collapsedControl"] {
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: flex !important;
+            z-index: 999999 !important;
+            background: rgba(15,23,42,.92) !important;
+            border: 1px solid rgba(35,211,195,.35) !important;
+            border-radius: 12px !important;
+            color: #e5edf7 !important;
+            box-shadow: 0 10px 26px rgba(0,0,0,.28) !important;
+        }
+        div[data-testid="stTextInput"] div[data-baseweb="input"],
+        div[data-testid="stNumberInput"] div[data-baseweb="input"] {
+            background: rgba(15,23,42,.92) !important;
+            border: 1px solid rgba(148,163,184,.24) !important;
+            border-radius: 12px !important;
+        }
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input {
+            background: rgba(15,23,42,.92) !important;
+            color: #e5edf7 !important;
+            -webkit-text-fill-color: #e5edf7 !important;
+            caret-color: #55f0de !important;
+        }
+        div[data-testid="stTextInput"] input::placeholder,
+        div[data-testid="stNumberInput"] input::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+        div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, rgba(35,211,195,.22), rgba(59,130,246,.18)) !important;
+            border: 1px solid rgba(35,211,195,.32) !important;
+            color: #e5edf7 !important;
+        }
+        div[data-baseweb="tag"] span { color: #e5edf7 !important; }
+        div[data-baseweb="tag"] svg { color: #a7f3d0 !important; fill: #a7f3d0 !important; }
+        div[data-baseweb="popover"] ul, div[data-baseweb="popover"] li {
+            background: #0f172a !important;
+            color: #e5edf7 !important;
+        }
+
+
+        /* FINAL UI PATCH 2026-06-03: keep original sidebar visible, remove collapse option, unify menus, tags and search boxes */
+        /* 1) 禁止用户收起侧边栏：隐藏 Streamlit 原生收起/展开控制，不影响侧边栏本体 */
+        div[data-testid="collapsedControl"],
+        button[data-testid="collapsedControl"],
+        div[data-testid="stSidebarCollapsedControl"],
+        button[data-testid="stSidebarCollapsedControl"],
+        section[data-testid="stSidebar"] button[data-testid="stSidebarCollapseButton"],
+        section[data-testid="stSidebar"] div[data-testid="stSidebarCollapseButton"],
+        section[data-testid="stSidebar"] button[title*="sidebar"],
+        section[data-testid="stSidebar"] button[aria-label*="sidebar"],
+        section[data-testid="stSidebar"] button[title*="Sidebar"],
+        section[data-testid="stSidebar"] button[aria-label*="Sidebar"],
+        section[data-testid="stSidebar"] button[title*="侧边栏"],
+        section[data-testid="stSidebar"] button[aria-label*="侧边栏"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* 4) 侧边栏菜单高亮背景长度统一 */
+        section[data-testid="stSidebar"] div[data-testid="stRadio"],
+        section[data-testid="stSidebar"] div[data-testid="stRadio"] > div,
+        section[data-testid="stSidebar"] [role="radiogroup"] {
+            width: 100% !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label {
+            width: 100% !important;
+            min-height: 50px !important;
+            padding: 11px 14px !important;
+            margin: 0 0 6px 0 !important;
+            border-radius: 13px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        section[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+            width: 100% !important;
+            background: linear-gradient(90deg, rgba(35,211,195,.18), rgba(59,130,246,.13)) !important;
+            border-left: 4px solid #23d3c3 !important;
+            border-top: 1px solid rgba(35,211,195,.14) !important;
+            border-right: 1px solid rgba(35,211,195,.10) !important;
+            border-bottom: 1px solid rgba(35,211,195,.10) !important;
+            box-shadow: inset 0 0 0 1px rgba(35,211,195,.10), 0 8px 24px rgba(0,0,0,.16) !important;
+        }
+
+        /* 3) 多选标签颜色：去掉不协调的亮红色，改为暗色科技蓝灰 */
+        div[data-testid="stMultiSelect"] div[data-baseweb="tag"],
+        div[data-testid="stMultiSelect"] span[data-baseweb="tag"],
+        div[data-baseweb="select"] div[data-baseweb="tag"],
+        div[data-baseweb="select"] span[data-baseweb="tag"],
+        div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, rgba(30,58,95,.96), rgba(30,64,91,.88)) !important;
+            background-color: #1e3a5f !important;
+            border: 1px solid rgba(125,211,252,.36) !important;
+            color: #e0f2fe !important;
+            box-shadow: none !important;
+        }
+        div[data-testid="stMultiSelect"] div[data-baseweb="tag"] *,
+        div[data-testid="stMultiSelect"] span[data-baseweb="tag"] *,
+        div[data-baseweb="tag"] * {
+            color: #e0f2fe !important;
+            -webkit-text-fill-color: #e0f2fe !important;
+        }
+        div[data-baseweb="tag"] svg,
+        div[data-testid="stMultiSelect"] svg {
+            color: #93c5fd !important;
+            fill: #93c5fd !important;
+        }
+
+        /* 5) 搜索框/输入框与下拉框统一为暗色，输入文字为白色 */
+        div[data-testid="stTextInput"] div[data-baseweb="input"],
+        div[data-testid="stNumberInput"] div[data-baseweb="input"] {
+            background: rgba(15,23,42,.92) !important;
+            border: 1px solid rgba(148,163,184,.24) !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+        }
+        div[data-testid="stTextInput"] input,
+        div[data-testid="stNumberInput"] input {
+            background: rgba(15,23,42,.92) !important;
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
+            caret-color: #55f0de !important;
+        }
+        div[data-testid="stTextInput"] input::placeholder,
+        div[data-testid="stNumberInput"] input::placeholder {
+            color: #94a3b8 !important;
+            -webkit-text-fill-color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
 
         </style>
         """,
@@ -839,962 +997,4 @@ def load_bnd_info() -> Tuple[pd.DataFrame, Dict[str, object]]:
                 if c not in std.columns:
                     std[c] = np.nan
 
-            invalid_tokens = ["", "—", "-", "未知", "未知发行人", "Unknown", "unknown", "nan", "None", "NaN", "没有单位"]
-            normalized_source = std[keep_cols].copy()
-            for c in keep_cols:
-                if c != "_merge_code":
-                    normalized_source[c] = normalized_source[c].where(~normalized_source[c].astype(str).str.strip().isin(invalid_tokens), np.nan)
-
-            normalized_source["_priority"] = pd.to_numeric(normalized_source.get("_priority", 0), errors="coerce").fillna(0)
-            normalized_source = normalized_source.sort_values(["_merge_code", "_priority"], ascending=[True, False])
-            normalized = normalized_source.groupby("_merge_code", as_index=False).first()
-            return normalized, {
-                "found": True,
-                "path": path,
-                "message": f"已读取债券基本信息静态资源：{path}，共 {len(normalized):,} 条。"
-            }
-        except Exception as exc:
-            error_msgs.append(f"{path} 读取失败：{exc}")
-
-    return pd.DataFrame(), {
-        "found": False,
-        "path": "; ".join(ordered_files[:3]),
-        "message": "已发现候选表，但读取或字段识别失败：" + "；".join(error_msgs[:3])
-    }
-
-
-def attach_bnd_info(pred_df: pd.DataFrame, info_df: pd.DataFrame) -> pd.DataFrame:
-    if info_df is None or info_df.empty:
-        pred_df["bnd_info_matched"] = False
-        return pred_df
-    out = pred_df.copy()
-    out["_merge_code"] = out["BondCode"].map(clean_code_value)
-    add_cols = [c for c in ["_merge_code", "BondName", "Issuer", "IssueDate", "MaturityDate", "BondType", "CreditRating", "Term", "CouponRate", "IssueAmount"] if c in info_df.columns]
-    merged = out.merge(info_df[add_cols], on="_merge_code", how="left", suffixes=("", "_info"))
-    for col in ["BondName", "Issuer", "IssueDate", "MaturityDate", "BondType", "CreditRating", "Term", "CouponRate", "IssueAmount"]:
-        info_col = f"{col}_info"
-        if info_col in merged.columns:
-            if col not in merged.columns:
-                merged[col] = merged[info_col]
-            else:
-                current = merged[col].astype(str).str.strip()
-                empty_tokens = ["", "—", "-", "未知", "未知发行人", "nan", "None", "NaN"]
-                empty_mask = merged[col].isna() | current.isin(empty_tokens)
-                # 预测文件里如果没有债券名称，前端会先用代码兜底；此时也应被基本信息表覆盖。
-                if col == "BondName" and "BondCode" in merged.columns:
-                    empty_mask = empty_mask | (current == merged["BondCode"].astype(str).str.strip())
-                if col == "Issuer" and "BondCode" in merged.columns:
-                    empty_mask = empty_mask | (current == merged["BondCode"].astype(str).str.strip())
-                merged[col] = merged[col].astype(object)
-                merged.loc[empty_mask, col] = merged.loc[empty_mask, info_col]
-            merged = merged.drop(columns=[info_col])
-    # 保证页面固定展示列一定存在，避免静态信息表缺少某些字段时报 KeyError。
-    for col in ["BondName", "Issuer", "IssueDate", "MaturityDate", "BondType", "CreditRating", "Term", "CouponRate", "IssueAmount"]:
-        if col not in merged.columns:
-            merged[col] = np.nan
-    matched_cols = [c for c in ["Issuer", "Term", "CreditRating"] if c in merged.columns]
-    if matched_cols:
-        valid_match = False
-        for c in matched_cols:
-            s = merged[c].astype(str).str.strip()
-            valid_match = valid_match | (~merged[c].isna() & ~s.isin(["", "—", "-", "未知", "未知发行人", "nan", "None", "NaN"]))
-        merged["bnd_info_matched"] = valid_match
-    else:
-        merged["bnd_info_matched"] = False
-    merged = merged.drop(columns=["_merge_code"], errors="ignore")
-    return merged
-
-
-def read_prediction_file(uploaded_file=None, explicit_path: Optional[str] = None) -> Tuple[pd.DataFrame, Dict[str, object]]:
-    """读取预测结果。优先级：上传文件 > 显式路径 > 校准后预测文件 > 备用预测文件 > demo。"""
-    status: Dict[str, object] = {
-        "mode": "demo",
-        "source_path": None,
-        "message": "未找到预测结果文件，已使用演示数据。",
-    }
-
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        info_df, info_status = load_bnd_info()
-        out = attach_bnd_info(normalize_predictions(df, source="uploaded"), info_df)
-        status.update({"mode": "uploaded", "source_path": getattr(uploaded_file, "name", "uploaded.csv"), "message": "已读取侧边栏上传的预测 CSV。", "bnd_info": info_status})
-        return out, status
-
-    if explicit_path and Path(explicit_path).exists():
-        path = str(explicit_path)
-        if path.lower().endswith(".csv"):
-            df = safe_read_csv(path)
-        elif path.lower().endswith(".parquet"):
-            df = pd.read_parquet(path)
-        else:
-            raise ValueError("仅支持 csv 或 parquet 文件。")
-        info_df, info_status = load_bnd_info()
-        out = attach_bnd_info(normalize_predictions(df, source=path), info_df)
-        status.update({"mode": "file", "source_path": path, "message": f"已读取 {path}", "bnd_info": info_status})
-        return out, status
-
-    csv_path = choose_prediction_file(
-        [
-            f"{DEFAULT_OUTPUT_DIR}/pred_20250630.csv",       # 校准后预测结果，优先读取
-            f"{DEFAULT_OUTPUT_DIR}/pred_*.csv",
-            f"{DEFAULT_OUTPUT_DIR}/predictions_20250630.csv", # 备用预测结果
-            f"{DEFAULT_OUTPUT_DIR}/predictions_*.csv",
-            "pred_20250630.csv",
-            "pred_*.csv",
-            "predictions_20250630.csv",
-            "predictions_*.csv",
-        ]
-    )
-    if csv_path:
-        df = safe_read_csv(csv_path)
-        info_df, info_status = load_bnd_info()
-        out = attach_bnd_info(normalize_predictions(df, source=csv_path), info_df)
-        status.update({"mode": "file", "source_path": csv_path, "message": f"已读取 {csv_path}", "bnd_info": info_status})
-        return out, status
-
-    parquet_path = latest_file(
-        [
-            "inference_predictions_calibrated.parquet",
-            "production_predictions_long.parquet",
-        ]
-    )
-    if parquet_path:
-        try:
-            df = pd.read_parquet(parquet_path)
-            info_df, info_status = load_bnd_info()
-            out = attach_bnd_info(normalize_predictions(df, source=parquet_path), info_df)
-            status.update({"mode": "file", "source_path": parquet_path, "message": f"已读取 {parquet_path}", "bnd_info": info_status})
-            return out, status
-        except Exception as exc:  # pragma: no cover - 仅部署环境中使用
-            status["message"] = f"发现 parquet 但读取失败：{exc}，已使用演示数据。"
-
-    info_df, info_status = load_bnd_info()
-    out = attach_bnd_info(make_demo_predictions(), info_df)
-    status["bnd_info"] = info_status
-    return out, status
-
-
-def normalize_predictions(df: pd.DataFrame, source: str = "") -> pd.DataFrame:
-    """把建模脚本输出、生产 parquet 或手工 CSV 统一成前端需要的列。"""
-    out = df.copy()
-    out.columns = [str(c).strip() for c in out.columns]
-
-    # ID / 名称字段兼容
-    if "Liscd" not in out.columns:
-        for alt in ["BondCode", "bond_code", "code", "债券代码"]:
-            if alt in out.columns:
-                out["Liscd"] = out[alt]
-                break
-    if "Liscd" not in out.columns:
-        out["Liscd"] = [f"ROW{i:06d}" for i in range(len(out))]
-
-    if "BondCode" not in out.columns:
-        out["BondCode"] = out["Liscd"].astype(str)
-    if "BondName" not in out.columns:
-        out["BondName"] = out.get("债券名称", out["BondCode"].astype(str))
-    if "Issuer" not in out.columns:
-        out["Issuer"] = out.get("发行人", "—")
-    for col in ["IssueDate", "MaturityDate", "BondType", "CreditRating", "Term", "CouponRate", "IssueAmount"]:
-        if col not in out.columns:
-            out[col] = np.nan
-    if "PeriodEnd" not in out.columns:
-        out["PeriodEnd"] = out.get("inference_date", out.get("sem_str", "未知"))
-
-    # 概率字段兼容：优先使用生产版 raw/cal，否则用 expanding_window 的 *_cum_prob；也兼容下载后的中文列名。
-    prob_source_cols: Dict[str, Optional[str]] = {}
-    for h in HORIZON_ORDER:
-        cal_col = _find_column_by_alias(out.columns, PROB_ALIASES[h])
-        raw_col = _find_column_by_alias(out.columns, RAW_PROB_ALIASES[h]) or cal_col
-        prob_source_cols[h] = cal_col
-        if cal_col is None:
-            out[f"{h}_prob_display"] = np.nan
-        else:
-            out[f"{h}_prob_display"] = _parse_probability_series(out[cal_col])
-        # 页面排序与风险分层采用展示口径；在校准文件存在时即为 y*_cal_prob，避免 raw 概率过高导致 Top 列表失真。
-        if raw_col is None:
-            out[f"{h}_prob_rank"] = out[f"{h}_prob_display"]
-        else:
-            raw_parsed = _parse_probability_series(out[raw_col])
-            out[f"{h}_prob_rank"] = out[f"{h}_prob_display"].where(out[f"{h}_prob_display"].notna(), raw_parsed)
-
-    # 缺失不强行填 0，避免出现“前期全 0、24 月极高”的误导展示。
-    for h in HORIZON_ORDER:
-        out[f"{h}_prob_missing"] = out[f"{h}_prob_display"].isna()
-    out.attrs["prob_source_cols"] = prob_source_cols
-
-    # 用于排序的 24m 若缺失，则退而使用可用的最长预测期限；显示仍保留缺失。
-    available_rank_cols = [f"{h}_prob_rank" for h in HORIZON_ORDER if out[f"{h}_prob_rank"].notna().any()]
-    if not out["y24m_prob_rank"].notna().any() and available_rank_cols:
-        out["y24m_prob_rank"] = out[available_rank_cols].bfill(axis=1).iloc[:, -1]
-    for h in HORIZON_ORDER:
-        out[f"{h}_prob_rank"] = out[f"{h}_prob_rank"].fillna(out[f"{h}_prob_display"])
-
-    # 排名和风险桶：默认按 y24m raw/rank 口径。
-    n = max(len(out), 1)
-    rank_base = out["y24m_prob_rank"].fillna(-1)
-    out["report_rank"] = rank_base.rank(method="first", ascending=False).astype(int)
-    out["report_rank_pct"] = out["report_rank"] / n
-    if "risk_bucket_by_y24m" not in out.columns:
-        out["risk_bucket_by_y24m"] = out["report_rank_pct"].apply(risk_bucket_from_rank_pct)
-    else:
-        out["risk_bucket_by_y24m"] = out["risk_bucket_by_y24m"].fillna(out["report_rank_pct"].apply(risk_bucket_from_rank_pct))
-
-    # 最可能违约时段。若建模脚本已经保存 most_likely_period，则直接使用；否则用各期差分粗略推断。
-    prob_matrix = out[[f"{h}_prob_display" for h in HORIZON_ORDER]].to_numpy(dtype=float)
-    missing_any = np.isnan(prob_matrix).any(axis=1)
-    nonmono = np.zeros(len(out), dtype=bool)
-    with np.errstate(invalid="ignore"):
-        nonmono = np.nanmin(np.diff(prob_matrix, axis=1), axis=1) < -1e-8
-    suspicious_jump = (
-        (np.nan_to_num(out["y6m_prob_display"], nan=0) <= 1e-8)
-        & (np.nan_to_num(out["y12m_prob_display"], nan=0) <= 1e-8)
-        & (np.nan_to_num(out["y18m_prob_display"], nan=0) <= 1e-8)
-        & (np.nan_to_num(out["y24m_prob_display"], nan=0) >= 0.50)
-    )
-    out["prob_quality_flag"] = np.select(
-        [missing_any, nonmono, suspicious_jump],
-        ["缺少部分期限概率", "期限结构非单调", "24个月异常跳升"],
-        default="正常",
-    )
-
-    if "most_likely_period" not in out.columns:
-        y6 = out["y6m_prob_display"].to_numpy(dtype=float)
-        y12 = out["y12m_prob_display"].to_numpy(dtype=float)
-        y18 = out["y18m_prob_display"].to_numpy(dtype=float)
-        y24 = out["y24m_prob_display"].to_numpy(dtype=float)
-        intervals = np.vstack([
-            y6,
-            np.clip(y12 - y6, 0, 1),
-            np.clip(y18 - y12, 0, 1),
-            np.clip(y24 - y18, 0, 1),
-        ]).T
-        labels = np.array(["0–6月", "6–12月", "12–18月", "18–24月"])
-        safe_intervals = np.nan_to_num(intervals, nan=-1)
-        out["most_likely_period"] = np.where(missing_any, "缺少期限概率", labels[np.argmax(safe_intervals, axis=1)])
-        out["max_period_prob"] = np.where(missing_any, np.nan, np.nanmax(intervals, axis=1))
-    else:
-        out["max_period_prob"] = pd.to_numeric(out.get("max_period_prob", np.nan), errors="coerce")
-
-    out["source"] = source
-    return out.sort_values("report_rank").reset_index(drop=True)
-
-# =============================================================================
-# 5. 页面组件
-# =============================================================================
-
-def sidebar_controls() -> Tuple[str, Optional[object], Optional[str]]:
-    with st.sidebar:
-        st.markdown(
-            """
-            <div class="sidebar-brand">
-              <div class="sidebar-brand-icon">♢</div>
-              <div>
-                <div class="sidebar-brand-title">债券违约预测</div>
-                <div class="sidebar-brand-sub">投资者风险监测</div>
-              </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        nav_labels = {
-            "首页总览": "▦　首页总览",
-            "验证结果": "↺　验证结果",
-            "高风险预测": "⚠　高风险预测",
-            "单券查询": "⌕　单券查询",
-            "模型说明": "⌘　模型说明",
-            "数据状态": "◎　数据状态",
-        }
-        page = st.radio(
-            "导航",
-            list(nav_labels.keys()),
-            index=0,
-            format_func=lambda x: nav_labels[x],
-            label_visibility="collapsed",
-        )
-
-        st.markdown("---")
-        uploaded_file = st.file_uploader("上传预测 CSV（可选）", type=["csv"])
-        explicit_path = st.text_input("预测文件路径（可选）", value="", placeholder="output_expanding/pred_20250630.csv")
-        return page, uploaded_file, explicit_path.strip() or None
-
-
-def render_home(pred_df: pd.DataFrame, metrics_df: pd.DataFrame, status: Dict[str, object]) -> None:
-    section_header(
-        "首页总览",
-        "汇总当前预测结果、风险分层结构和模型历史测试表现，帮助快速把握债券池整体风险。",
-    )
-    st.markdown(
-        f"""
-        <div class="notice">
-        当前数据源：{status.get('message', '')} &nbsp; <span class="badge badge-green">{MODEL_NAME}</span>
-        <span class="badge badge-purple">按校准后未来24个月风险排序</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    render_feature_grid([
-        ("📊", "整体风险看板", "汇总预测债券数量、高风险比例和最高风险水平，适合快速浏览债券池状态。"),
-        ("✅", "历史测试表现", "展示前三个 Fold 测试窗口表现，观察模型区分能力和稳定性。"),
-        ("⚠️", "高风险预警", "按未来24个月违约概率排序，定位 Top 1%、1–5% 等重点债券。"),
-        ("🔎", "单券查询", "支持按债券代码、名称或发行人查询，输出单券风险摘要和期限结构。"),
-    ])
-
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        metric_card("预测债券数", f"{len(pred_df):,}", "当前预测主表行数")
-    with c2:
-        top_count = int((pred_df["risk_bucket_by_y24m"] == "Top 1%").sum())
-        metric_card("Top 1% 数量", f"{top_count:,}", "按未来24个月风险排名")
-    with c3:
-        metric_card("最高未来24个月风险", pct(pred_df["y24m_prob_display"].max()), "当前样本最高预测值")
-    with c4:
-        metric_card("Fold 测试记录", f"{len(metrics_df):,}", "历史测试窗口指标行数")
-
-    left, right = st.columns([1.05, 1])
-    with left:
-        bucket_counts = (
-            pred_df["risk_bucket_by_y24m"]
-            .value_counts()
-            .reindex(RISK_BUCKET_ORDER)
-            .fillna(0)
-            .reset_index()
-        )
-        bucket_counts.columns = ["风险分层", "债券数"]
-        fig = px.bar(bucket_counts, x="风险分层", y="债券数", title="风险分层分布（按未来24个月风险排序）")
-        fig = plot_layout(fig, height=360)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "该图展示不同风险层级的债券数量。Top 1% 和 1–5% 是最需要优先关注的债券池；10–20% 可作为次级观察名单，Other 表示当前排序相对靠后。")
-
-    with right:
-        summary = metrics_df.groupby("horizon", as_index=False).agg(
-            pr_auc_mean=("pr_auc", "mean"),
-            roc_auc_mean=("roc_auc", "mean"),
-            top5_recall_mean=("top5_recall", "mean"),
-        )
-        summary["horizon_order"] = summary["horizon"].map({"6m": 1, "12m": 2, "18m": 3, "24m": 4})
-        summary["horizon_cn"] = summary["horizon"].map({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
-        summary = summary.sort_values("horizon_order")
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=summary["horizon_cn"], y=summary["pr_auc_mean"], mode="lines+markers", name="平均 PR-AUC"))
-        fig.add_trace(go.Scatter(x=summary["horizon_cn"], y=summary["roc_auc_mean"], mode="lines+markers", name="平均 ROC-AUC"))
-        fig.add_trace(go.Scatter(x=summary["horizon_cn"], y=summary["top5_recall_mean"], mode="lines+markers", name="平均 Top5%召回率"))
-        fig.update_layout(title="Fold 测试集表现")
-        fig = plot_layout(fig, height=360)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "ROC-AUC 反映整体区分能力；PR-AUC 更适合违约样本稀缺的场景；Top5%召回率表示模型把真实高风险样本筛入前 5% 名单的能力。")
-
-    st.markdown(
-        f"""
-        <div class="summary-box">
-          <b>当前债券池解读：</b>系统默认使用未来24个月风险排序进行分层，当前 Top 1% 债券共 <b>{top_count:,}</b> 只，
-          最高未来24个月预测概率为 <b>{pct(pred_df['y24m_prob_display'].max())}</b>。建议先查看“高风险预测”页面形成预警名单，再进入“单券查询”查看具体债券的风险释放窗口。
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.subheader("高风险债券 TOP 10")
-    show_cols = ["report_rank", "BondCode", "BondName", "Issuer", "risk_bucket_by_y24m", "y6m_prob_display", "y12m_prob_display", "y18m_prob_display", "y24m_prob_display", "most_likely_period", "prob_quality_flag"]
-    view = pred_df.reindex(columns=show_cols).head(10).copy()
-    view = format_prediction_table(view)
-    dark_table(view, max_height=420)
-
-
-def render_validation(metrics_df: pd.DataFrame) -> None:
-    section_header(
-        "验证结果：前三个 Fold 测试集表现",
-        "展示模型在三个 Fold 测试集上的区分能力、Top-k 捕获能力和误差水平。",
-    )
-    st.markdown(
-        "<div class='notice'>图表中的指标包括 ROC-AUC、PR-AUC、Brier、Log Loss 与 Top-k Precision / Recall，用于展示各 Fold 测试集表现。</div>",
-        unsafe_allow_html=True,
-    )
-
-    fold_schedule = pd.DataFrame([
-        {"Fold": "Fold1", "训练集": "20070101-20191231", "验证集": "20200101-20201231", "测试集": "20210101-20211231"},
-        {"Fold": "Fold2", "训练集": "20070101-20201231", "验证集": "20210101-20211231", "测试集": "20220101-20221231"},
-        {"Fold": "Fold3", "训练集": "20070101-20211231", "验证集": "20220101-20221231", "测试集": "20230101-20231231"},
-    ])
-    dark_table(fold_schedule, max_height=180)
-
-    with st.container():
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
-            metric_card("平均 PR-AUC", fmt_num(metrics_df["pr_auc"].mean()), "越高越好，越能识别少数违约样本")
-        with c2:
-            metric_card("平均 ROC-AUC", fmt_num(metrics_df["roc_auc"].mean()), "越高越好，表示区分能力更强")
-        with c3:
-            metric_card("平均 Top5%召回率", pct(metrics_df["top5_recall"].mean()), "越高说明高风险债券捕捉越充分")
-        with c4:
-            metric_card("平均 Brier", fmt_num(metrics_df["brier"].mean()), "越低越好，表示概率误差更小")
-
-    horizon_map = {"未来6个月": "6m", "未来12个月": "12m", "未来18个月": "18m", "未来24个月": "24m"}
-    selected_horizon_cn = st.multiselect(
-        "选择预测期限",
-        options=list(horizon_map.keys()),
-        default=list(horizon_map.keys()),
-    )
-    selected_horizons = [horizon_map[x] for x in selected_horizon_cn]
-    selected_folds = st.multiselect(
-        "选择 Fold",
-        options=["Fold1", "Fold2", "Fold3"],
-        default=["Fold1", "Fold2", "Fold3"],
-    )
-    df = metrics_df[metrics_df["horizon"].isin(selected_horizons) & metrics_df["fold"].isin(selected_folds)].copy()
-    df["期限中文"] = df["horizon"].map({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
-
-    tab1, tab2, tab3, tab4 = st.tabs(["区分能力", "Top-k 捕获", "稳定性", "明细表"])
-    with tab1:
-        long = df.melt(id_vars=["fold", "期限中文"], value_vars=["roc_auc", "pr_auc"], var_name="指标", value_name="数值")
-        long["指标"] = long["指标"].replace({"roc_auc": "ROC-AUC", "pr_auc": "PR-AUC"})
-        fig = px.bar(long, x="期限中文", y="数值", color="fold", barmode="group", facet_col="指标", title="各 Fold × 预测期限的区分能力")
-        fig.update_yaxes(range=[0, 1])
-        fig = plot_layout(fig, height=420)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "ROC-AUC 用于观察模型对违约与非违约债券的整体区分能力；PR-AUC 更适合违约预测这类样本不平衡场景。若两项指标在不同 Fold 中波动不大，说明模型具有较好的时间稳定性。")
-
-    with tab2:
-        metric_name_map = {
-            "top1_precision": "Top1% 精确率",
-            "top1_recall": "Top1% 召回率",
-            "top5_precision": "Top5% 精确率",
-            "top5_recall": "Top5% 召回率",
-            "top10_precision": "Top10% 精确率",
-            "top10_recall": "Top10% 召回率",
-        }
-        top_metric = st.selectbox("Top-k 指标", list(metric_name_map.keys()), format_func=lambda x: metric_name_map[x])
-        fig = px.bar(df, x="期限中文", y=top_metric, color="fold", barmode="group", title=f"{metric_name_map[top_metric]}：不同 Fold 对比")
-        fig.update_yaxes(range=[0, 1], tickformat=".0%")
-        fig = plot_layout(fig, height=400)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-
-        c1, c2 = st.columns(2)
-        with c1:
-            fig = px.line(df, x="期限中文", y="top5_precision", color="fold", markers=True, title="Top5% 精确率")
-            fig.update_yaxes(range=[0, 1], tickformat=".0%")
-            fig = plot_layout(fig, height=330)
-            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        with c2:
-            fig = px.line(df, x="期限中文", y="top5_recall", color="fold", markers=True, title="Top5% 召回率")
-            fig.update_yaxes(range=[0, 1], tickformat=".0%")
-            fig = plot_layout(fig, height=330)
-            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "Top-k 指标反映模型把高风险债券排在前列的能力。召回率高，说明真实违约债券中有更大比例被提前筛入重点名单；精确率高，则说明前列名单中“真正高风险”的占比更高。")
-
-    with tab3:
-        stability = df.groupby("fold", as_index=False).agg(
-            pr_auc=("pr_auc", "mean"),
-            roc_auc=("roc_auc", "mean"),
-            brier=("brier", "mean"),
-            top5_recall=("top5_recall", "mean"),
-        )
-        fig = go.Figure()
-        for col, name in [("pr_auc", "PR-AUC"), ("roc_auc", "ROC-AUC"), ("top5_recall", "Top5% 召回率")]:
-            fig.add_trace(go.Scatter(x=stability["fold"], y=stability[col], mode="lines+markers", name=name))
-        fig.update_layout(title="跨 Fold 平均表现稳定性")
-        fig.update_yaxes(range=[0, 1], tickformat=".0%")
-        fig = plot_layout(fig, height=380)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "如果不同 Fold 之间曲线较平稳，说明模型在不同时间窗口上的表现较一致，具有更好的泛化能力。若出现明显下降，则提示模型可能对某些年份或市场环境更敏感。")
-
-        dark_table(format_metric_table(stability), max_height=260)
-
-    with tab4:
-        st.markdown("#### Fold 时间窗口划分")
-        dark_table(fold_schedule, max_height=180)
-        st.markdown("#### 指标明细")
-        dark_table(format_metric_table(df.drop(columns=["期限中文"], errors="ignore")), max_height=520)
-        csv = df.drop(columns=["horizon_order", "期限中文"], errors="ignore").to_csv(index=False, encoding="utf-8-sig")
-        st.download_button("下载 Fold 测试集指标 CSV", data=csv, file_name="fold_test_metrics.csv", mime="text/csv")
-
-
-def render_predictions(pred_df: pd.DataFrame) -> None:
-    section_header(
-        "高风险预测",
-        "展示当前预测日期下的高风险债券列表。默认按未来24个月预测概率排序，并用排名百分位划分风险桶。",
-    )
-    st.markdown(
-        "<div class='notice'>风险分层使用排名百分位：Top 1% / 1–5% / 5–10% / 10–20% / Other。用户可优先关注排序靠前且长期违约概率较高的债券。</div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown("<div class='rank-band'><span></span><span></span><span></span><span></span><span></span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='pill-row'><span class='soft-pill'>红色：Top 1%</span><span class='soft-pill'>橙色：1–5%</span><span class='soft-pill'>黄色：5–10%</span><span class='soft-pill'>绿色：10–20%</span><span class='soft-pill'>灰色：Other</span></div>", unsafe_allow_html=True)
-
-    top_cols = st.columns([1, 1, 2])
-    with top_cols[0]:
-        horizon = st.selectbox("排序/展示期限", HORIZON_ORDER, index=3, format_func=lambda h: HORIZON_LABELS[h])
-    with top_cols[1]:
-        buckets = st.multiselect("风险分层", RISK_BUCKET_ORDER, default=RISK_BUCKET_ORDER[:4])
-    with top_cols[2]:
-        query = st.text_input("搜索债券代码 / 名称 / 发行人", value="")
-
-    df = pred_df.copy()
-    df["rank_for_view"] = df[f"{horizon}_prob_rank"].rank(method="first", ascending=False).astype(int)
-    df = df[df["risk_bucket_by_y24m"].isin(buckets)] if buckets else df.iloc[0:0]
-    if query:
-        q = query.lower().strip()
-        mask = (
-            df["BondCode"].astype(str).str.lower().str.contains(q, na=False)
-            | df["BondName"].astype(str).str.lower().str.contains(q, na=False)
-            | df["Issuer"].astype(str).str.lower().str.contains(q, na=False)
-            | df["Liscd"].astype(str).str.lower().str.contains(q, na=False)
-        )
-        df = df[mask]
-
-    df = df.sort_values(f"{horizon}_prob_rank", ascending=False)
-    if df.empty:
-        st.warning("当前筛选条件下没有匹配债券。")
-        return
-
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        metric_card("筛选后债券数", f"{len(df):,}", "当前条件下的债券数量")
-    with c2:
-        metric_card("筛选均值", pct(df[f"{horizon}_prob_display"].mean()), HORIZON_LABELS[horizon])
-    with c3:
-        metric_card("筛选最大值", pct(df[f"{horizon}_prob_display"].max()), "当前筛选集最高风险")
-    with c4:
-        metric_card("Top 1% 占比", pct((df["risk_bucket_by_y24m"] == "Top 1%").mean()), "筛选集中最高风险桶比例")
-
-    c1, c2 = st.columns([1.1, 1])
-    with c1:
-        top_n = df.head(20).copy()
-        fig = px.bar(
-            top_n.sort_values(f"{horizon}_prob_display"),
-            x=f"{horizon}_prob_display",
-            y="BondCode",
-            orientation="h",
-            color="risk_bucket_by_y24m",
-            category_orders={"risk_bucket_by_y24m": RISK_BUCKET_ORDER},
-            title=f"TOP 20：{HORIZON_LABELS[horizon]}预测概率",
-        )
-        fig.update_xaxes(tickformat=".1%")
-        fig = plot_layout(fig, height=530)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "左图按照所选期限对高风险债券进行排序。柱子越长，表示该债券在对应预测期限内的违约风险越高；同时处于 Top 1% 或 1–5% 的债券应优先进入预警名单。")
-    with c2:
-        means = pd.DataFrame({
-            "horizon": [HORIZON_LABELS[h] for h in HORIZON_ORDER],
-            "avg_prob": [df[f"{h}_prob_display"].mean() if len(df) else 0 for h in HORIZON_ORDER],
-            "max_prob": [df[f"{h}_prob_display"].max() if len(df) else 0 for h in HORIZON_ORDER],
-        })
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=means["horizon"], y=means["avg_prob"], mode="lines+markers", name="筛选均值"))
-        fig.add_trace(go.Scatter(x=means["horizon"], y=means["max_prob"], mode="lines+markers", name="筛选最大值"))
-        fig.update_yaxes(tickformat=".1%")
-        fig.update_layout(title="筛选债券的期限结构概览")
-        fig = plot_layout(fig, height=530)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "右图展示当前筛选债券在不同预测期限上的平均风险与最大风险。平均值反映筛选组合整体风险，最大值用于识别极端高风险样本。")
-
-    st.markdown(
-        f"""
-        <div class="summary-box">
-          <b>筛选结果摘要：</b>当前条件下共筛出 <b>{len(df):,}</b> 只债券，{HORIZON_LABELS[horizon]}平均预测概率为 <b>{pct(df[f'{horizon}_prob_display'].mean())}</b>，
-          最高值为 <b>{pct(df[f'{horizon}_prob_display'].max())}</b>。建议优先查看排名靠前、风险分层为 Top 1% 或 1–5% 的债券。
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.subheader("预测明细")
-    show_cols = ["report_rank", "BondCode", "Issuer", "Term", "CreditRating", "risk_bucket_by_y24m", "y6m_prob_display", "y12m_prob_display", "y18m_prob_display", "y24m_prob_display", "report_rank_pct", "most_likely_period", "prob_quality_flag"]
-    view = format_prediction_table(df.reindex(columns=show_cols).head(500).copy())
-    dark_table(view, max_height=430)
-
-    csv = df.to_csv(index=False, encoding="utf-8-sig")
-    st.download_button("下载当前筛选结果 CSV", data=csv, file_name="bond_default_predictions_filtered.csv", mime="text/csv")
-
-
-def render_bond_query(pred_df: pd.DataFrame) -> None:
-    section_header(
-        "单券查询",
-        "输入债券代码、债券名称或发行人关键词，查看单支债券的风险等级、风险排名、违约时间结构和模型解释摘要。",
-    )
-
-    search_cols = st.columns([2.2, 1, 1])
-    with search_cols[0]:
-        default_code = str(pred_df.iloc[0]["BondCode"]) if len(pred_df) else ""
-        query = st.text_input("债券代码 / 名称 / 发行人", value=default_code, placeholder="例如：111023、某某债、发行人名称")
-    with search_cols[1]:
-        rank_horizon = st.selectbox("重点观察期限", HORIZON_ORDER, index=3, format_func=lambda h: HORIZON_LABELS[h])
-    with search_cols[2]:
-        max_matches = st.number_input("最多显示匹配数", min_value=5, max_value=100, value=20, step=5)
-
-    if not query:
-        st.info("请输入关键词进行查询。")
-        return
-
-    q = query.lower().strip()
-    matches = pred_df[
-        pred_df["BondCode"].astype(str).str.lower().str.contains(q, na=False)
-        | pred_df["BondName"].astype(str).str.lower().str.contains(q, na=False)
-        | pred_df["Issuer"].astype(str).str.lower().str.contains(q, na=False)
-        | pred_df["Liscd"].astype(str).str.lower().str.contains(q, na=False)
-    ].copy()
-
-    if matches.empty:
-        st.warning("没有找到匹配债券。可以尝试输入更短的债券代码、债券简称或发行人关键词。")
-        return
-
-    matches = matches.sort_values("report_rank").head(int(max_matches))
-    if len(matches) > 1:
-        label_options = [
-            f"{r.BondCode}｜{r.BondName}｜{r.Issuer}｜Rank #{int(r.report_rank)}"
-            for r in matches.itertuples()
-        ]
-        selected_label = st.selectbox("找到多条结果，请选择一只债券", label_options)
-        selected_code = selected_label.split("｜", 1)[0]
-        row = matches[matches["BondCode"].astype(str) == selected_code].iloc[0]
-    else:
-        row = matches.iloc[0]
-
-    y6 = float(row.get("y6m_prob_display", 0.0))
-    y12 = float(row.get("y12m_prob_display", 0.0))
-    y18 = float(row.get("y18m_prob_display", 0.0))
-    y24 = float(row.get("y24m_prob_display", 0.0))
-    rank_pct = float(row.get("report_rank_pct", 1.0))
-    bucket = str(row.get("risk_bucket_by_y24m", "Other"))
-    if bucket in ["Top 1%", "1–5%"] or y24 >= 0.30:
-        risk_level, risk_tone = "高风险", "#fecaca"
-    elif bucket in ["5–10%", "10–20%"] or y24 >= 0.12:
-        risk_level, risk_tone = "中风险", "#fde68a"
-    else:
-        risk_level, risk_tone = "低风险", "#bbf7d0"
-    is_top1 = bucket == "Top 1%" or rank_pct <= 0.01
-
-    st.markdown(
-        f"""
-        <div class="card">
-          <div class="eyebrow">Bond Detail</div>
-          <h3 style="margin: 6px 0 8px 0;">{row.get('BondName', row.get('BondCode', ''))}</h3>
-          <div class="small-muted">代码：{row.get('BondCode', row.get('Liscd', ''))}　|　发行人：{row.get('Issuer', '—')}　|　预测日期：{row.get('PeriodEnd', '未知')}</div>
-          <div style="margin-top: 12px;">{display_bucket(bucket)} <span class="badge badge-purple">Rank #{int(row.get('report_rank', 0))}</span> <span class="badge badge-green">排名百分位 {pct(rank_pct)}</span></div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        st.markdown(f"""<div class="risk-card"><div class="risk-card-label">综合风险等级</div><div class="risk-card-value" style="color:{risk_tone};">{risk_level}</div><div class="risk-card-help">未来24个月累计违约概率：{pct(y24)}</div></div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown(f"""<div class="risk-card"><div class="risk-card-label">最可能违约时段</div><div class="risk-card-value">{row.get('most_likely_period', '—')}</div><div class="risk-card-help">区间概率：{pct(row.get('max_period_prob', np.nan))}</div></div>""", unsafe_allow_html=True)
-    with c3:
-        st.markdown(f"""<div class="risk-card"><div class="risk-card-label">Top 1% 高风险</div><div class="risk-card-value" style="color:{'#fecaca' if is_top1 else '#bbf7d0'};">{'是' if is_top1 else '否'}</div><div class="risk-card-help">按未来24个月风险排名判断</div></div>""", unsafe_allow_html=True)
-    with c4:
-        st.markdown(f"""<div class="risk-card"><div class="risk-card-label">重点期限风险</div><div class="risk-card-value">{pct(row[f'{rank_horizon}_prob_display'])}</div><div class="risk-card-help">{HORIZON_LABELS[rank_horizon]}</div></div>""", unsafe_allow_html=True)
-
-    if row.get("prob_quality_flag", "正常") != "正常":
-        st.markdown(
-            f"<div class='notice'>概率字段检查：<b>{row.get('prob_quality_flag')}</b>。这通常表示部分预测期限未正确接入、期限结构异常，或出现未来24个月概率异常跳升，建议回到预测 CSV 对应行核查。</div>",
-            unsafe_allow_html=True,
-        )
-
-    st.markdown(
-        f"""
-        <div class="summary-box">
-          <b>单券风险结论：</b>{probability_sentence(row)} {rank_position_sentence(rank_pct, bucket)}
-          该债券未来6个月、12个月、18个月、24个月累计违约概率分别为 <b>{pct(y6)}</b>、<b>{pct(y12)}</b>、<b>{pct(y18)}</b>、<b>{pct(y24)}</b>。
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    left, right = st.columns([1.1, 1])
-    with left:
-        term_df = pd.DataFrame({
-            "期限": [HORIZON_LABELS[h] for h in HORIZON_ORDER],
-            "累计违约概率": [row[f"{h}_prob_display"] for h in HORIZON_ORDER],
-        })
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=term_df["期限"], y=term_df["累计违约概率"], mode="lines+markers", name="累计违约概率", line=dict(width=3)))
-        fig.add_trace(go.Bar(x=term_df["期限"], y=term_df["累计违约概率"], name="概率柱", opacity=0.35))
-        fig.update_yaxes(tickformat=".1%")
-        fig.update_layout(title="累计违约概率期限结构")
-        fig = plot_layout(fig, height=430)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "该图展示单只债券在不同预测期限上的累计违约概率。曲线越陡，说明随着时间拉长，风险累积越明显；如果未来6个月概率已经较高，则更需要关注近期风险。")
-
-    with right:
-        intervals = pd.DataFrame({
-            "时间段": ["0–6个月", "6–12个月", "12–18个月", "18–24个月"],
-            "区间概率": [y6, max(y12 - y6, 0), max(y18 - y12, 0), max(y24 - y18, 0)],
-        })
-        fig = px.bar(intervals, x="时间段", y="区间概率", title="区间违约风险拆分")
-        fig.update_yaxes(tickformat=".1%")
-        fig = plot_layout(fig, height=430)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-        insight_box("图表解读", "该图把累计违约概率拆分为各时间区间的新增风险贡献，有助于判断风险更可能集中在近期还是中长期。")
-
-    detail = pd.DataFrame({
-        "项目": [
-            "债券代码", "债券名称", "发行机构全称", "期限", "信用等级",
-            "预测日期", "风险分层", "排名", "排名百分位", "未来6个月违约概率", "未来12个月违约概率",
-            "未来18个月违约概率", "未来24个月违约概率", "概率字段检查",
-        ],
-        "内容": [
-            row.get("BondCode", "—"), row.get("BondName", "—"), row.get("Issuer", "—"), row.get("Term", "—"), row.get("CreditRating", "—"),
-            row.get("PeriodEnd", "—"), bucket, int(row.get("report_rank", 0)), pct(rank_pct),
-            pct(y6), pct(y12), pct(y18), pct(y24), row.get("prob_quality_flag", "—"),
-        ],
-    })
-    dark_table(detail, max_height=420)
-
-
-def render_model_note(metrics_df: pd.DataFrame) -> None:
-    section_header(
-        "模型说明",
-        "说明系统的预测口径、核心页面功能和风险解释方式，便于用户理解各项输出。",
-    )
-
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        metric_card("模型框架", "XGBoost", "离散 Hazard 违约预测")
-    with c2:
-        metric_card("预测期限", "4 个", "未来6个月 / 12个月 / 18个月 / 24个月")
-    with c3:
-        metric_card("概率口径", "Calibrated", "优先展示 y*_cal_prob")
-    with c4:
-        metric_card("验证方式", "Rolling Fold", "按时间窗口检验稳定性")
-
-    st.markdown(
-        """
-        <div class="card">
-        <h3>系统功能</h3>
-        <p><b>首页总览</b>：查看债券池规模、风险分层分布、期限结构均值与测试表现。</p>
-        <p><b>验证结果</b>：比较模型在多个历史测试窗口中的 ROC-AUC、PR-AUC、Brier、Log Loss 和 Top-k 捕获效果。</p>
-        <p><b>高风险预测</b>：按照风险排名筛选 Top 1%、1–5%、5–10%、10–20% 等重点债券，并支持导出明细。</p>
-        <p><b>单券查询</b>：输入债券代码、债券名称或发行人关键词，查看单只债券的违约概率期限结构、风险分层、排名位置和风险摘要。</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("### 建模口径")
-    st.markdown(
-        """
-        - 模型采用 expanding window 思路，训练窗口随时间扩张，保持时间顺序，降低未来信息泄漏风险。
-        - 输出结果包括未来 6 个月、12 个月、18 个月、24 个月的累计违约概率，页面已统一使用中文标签展示。
-        - 当前页面优先读取校准后预测文件 pred_20250630.csv，并优先展示 y6m/y12m/y18m/y24m 的 cal_prob 校准后概率。
-        - 风险分层以校准后未来24个月风险排名百分位为核心口径：Top 1%、1–5%、5–10%、10–20%、Other。
-        - 概率数值用于描述模型判断强弱，风险排名用于识别相对更需要关注的债券。
-        """
-    )
-    st.markdown(
-        """
-        <div class="glossary-grid">
-          <div class="glossary-card"><b>ROC-AUC</b><p>衡量模型区分违约与非违约债券的整体能力，越高越好。</p></div>
-          <div class="glossary-card"><b>PR-AUC</b><p>更适合违约样本较少的场景，反映模型识别少数高风险样本的能力。</p></div>
-          <div class="glossary-card"><b>Top-k 召回率</b><p>表示真实高风险债券中有多少被筛入前 k% 预警名单。</p></div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-def render_data_status(pred_df: pd.DataFrame, status: Dict[str, object]) -> None:
-    section_header(
-        "数据与运行状态",
-        "查看当前页面读取的预测文件、预测行数、字段要求和数据预览。",
-    )
-
-    expected = [
-        f"{DEFAULT_OUTPUT_DIR}/pred_20250630.csv（校准后预测结果，优先读取）",
-        f"{DEFAULT_OUTPUT_DIR}/predictions_*.csv（备用预测结果）",
-        f"{DEFAULT_OUTPUT_DIR}/metrics_calibrated.csv（概率校准评估指标）",
-        "bnd_info_compact.csv / BND_Bndinfo.xlsx（用于补全发行机构全称、期限、信用等级）",
-        "fold_test_metrics.csv（可选，用于替换内置测试集指标）",
-    ]
-    rows = []
-    for item in expected:
-        if "pred_20250630" in item:
-            matched = glob.glob(f"{DEFAULT_OUTPUT_DIR}/pred_20250630.csv")
-            rows.append({"项目": item, "状态": "存在" if matched else "缺失", "说明": "; ".join(matched[:3]) if matched else "未发现"})
-        elif "predictions_*.csv" in item:
-            matched = glob.glob(f"{DEFAULT_OUTPUT_DIR}/predictions_*.csv")
-            rows.append({"项目": item, "状态": "存在" if matched else "缺失", "说明": "; ".join(matched[:3]) if matched else "未发现"})
-        elif "metrics_calibrated" in item:
-            matched = glob.glob(f"{DEFAULT_OUTPUT_DIR}/metrics_calibrated.csv")
-            rows.append({"项目": item, "状态": "存在" if matched else "缺失", "说明": "; ".join(matched[:3]) if matched else "未发现"})
-        elif "BND_Bndinfo" in item or "bnd_info" in item or "债券基本信息" in item:
-            info_status = status.get("bnd_info", {})
-            rows.append({"项目": item, "状态": "存在" if info_status.get("found") else "缺失", "说明": info_status.get("message", "未读取")})
-        else:
-            rows.append({"项目": item, "状态": "内置", "说明": "当前页面已内置测试集指标，也可以后续替换为外部 CSV。"})
-
-    st.markdown(
-        f"""
-        <div class="notice">
-        当前读取模式：<b>{status.get('mode')}</b>；来源：<b>{status.get('source_path') or 'demo data'}</b>；当前预测行数：<b>{len(pred_df):,}</b>。<br/>
-        债券基本信息表：<b>{status.get('bnd_info', {}).get('message', '未读取')}</b>。
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    dark_table(pd.DataFrame(rows), max_height=260)
-
-    st.markdown("### 预测文件需要包含的最低字段")
-    st.markdown(
-        """<div class="field-code-box">Liscd, PeriodEnd, sem_str, y6m_cum_prob, y12m_cum_prob, y18m_cum_prob, y24m_cum_prob<br><span class="comment"># 可选字段：BondCode, BondName, Issuer, most_likely_period, max_period_prob</span></div>""",
-        unsafe_allow_html=True,
-    )
-
-    if "prob_quality_flag" in pred_df.columns:
-        st.markdown("### 概率字段检查")
-        qdf = pred_df["prob_quality_flag"].value_counts(dropna=False).reset_index()
-        qdf.columns = ["检查结果", "债券数"]
-        dark_table(qdf, max_height=180)
-
-    if "bnd_info_matched" in pred_df.columns:
-        st.markdown("### 债券基本信息匹配情况")
-        mdf = pd.DataFrame({"匹配状态": ["匹配"], "债券数": [len(pred_df)]})
-        dark_table(mdf, max_height=160)
-
-    preview = format_prediction_table(pred_df.head(20).copy())
-    st.markdown("### 当前数据预览")
-    dark_table(preview, max_height=430)
-
-
-# =============================================================================
-# 6. 表格格式化
-# =============================================================================
-
-def format_metric_table(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
-    rename = {
-        "fold": "Fold",
-        "test_year": "测试窗口",
-        "horizon": "期限",
-        "n_samples": "样本数",
-        "n_positive": "正样本",
-        "base_rate": "基准率",
-        "roc_auc": "ROC-AUC",
-        "pr_auc": "PR-AUC",
-        "brier": "Brier",
-        "log_loss": "LogLoss",
-        "top1_precision": "Top1% P",
-        "top1_recall": "Top1% R",
-        "top5_precision": "Top5% P",
-        "top5_recall": "Top5% R",
-        "top10_precision": "Top10% P",
-        "top10_recall": "Top10% R",
-    }
-    out = out.drop(columns=["horizon_order", "note", "期限中文"], errors="ignore")
-    out = out.rename(columns=rename)
-    if "期限" in out.columns:
-        out["期限"] = out["期限"].replace({"6m": "未来6个月", "12m": "未来12个月", "18m": "未来18个月", "24m": "未来24个月"})
-    percent_cols = ["基准率", "Top1% P", "Top1% R", "Top5% P", "Top5% R", "Top10% P", "Top10% R"]
-    for c in percent_cols:
-        if c in out.columns:
-            out[c] = out[c].map(lambda x: pct(x, 2))
-    for c in ["ROC-AUC", "PR-AUC", "Brier", "LogLoss"]:
-        if c in out.columns:
-            out[c] = out[c].map(lambda x: fmt_num(x, 4))
-    return out
-
-
-def format_prediction_table(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
-    rename = {
-        "report_rank": "排名",
-        "rank_for_view": "展示排名",
-        "BondCode": "债券代码",
-        "BondName": "债券名称",
-        "Issuer": "发行机构全称",
-        "IssueDate": "发行日期",
-        "MaturityDate": "到期日期",
-        "BondType": "债券类型",
-        "CreditRating": "信用等级",
-        "Term": "期限",
-        "CouponRate": "票面利率",
-        "IssueAmount": "发行规模（亿元）",
-        "risk_bucket_by_y24m": "风险分层",
-        "y6m_prob_display": "未来6个月违约概率",
-        "y12m_prob_display": "未来12个月违约概率",
-        "y18m_prob_display": "未来18个月违约概率",
-        "y24m_prob_display": "未来24个月违约概率",
-        "report_rank_pct": "排名百分位",
-        "most_likely_period": "最可能时段",
-        "prob_quality_flag": "概率检查",
-    }
-    out = out.rename(columns=rename)
-    for c in ["未来6个月违约概率", "未来12个月违约概率", "未来18个月违约概率", "未来24个月违约概率", "排名百分位"]:
-        if c in out.columns:
-            out[c] = out[c].map(lambda x: pct(x, 2))
-    return out
-
-
-def render_cover_page() -> None:
-    st.markdown(
-        """
-        <div class="cover-wrap">
-          <div class="cover-card">
-            <div class="eyebrow">BOND DEFAULT · PREDICTION</div>
-            <div class="cover-title">债券违约预测<br/>可视化系统</div>
-            <div class="cover-sub">
-              本系统面向债券风险识别与预警场景，基于机器学习模型输出不同期限的累计违约概率，
-              并通过风险分层、历史测试表现、高风险排行和单券查询，帮助用户快速定位需要重点关注的债券。
-            </div>
-            <div class="cover-grid">
-              <div class="cover-feature"><div class="icon">📊</div><b>首页总览</b><p>查看债券池整体风险、分层结构和核心指标。</p></div>
-              <div class="cover-feature"><div class="icon">✅</div><b>验证结果</b><p>展示多个历史测试窗口下的模型表现。</p></div>
-              <div class="cover-feature"><div class="icon">⚠️</div><b>高风险预测</b><p>按风险排名筛选 Top 债券并支持导出。</p></div>
-              <div class="cover-feature"><div class="icon">🔎</div><b>单券查询</b><p>输入代码、名称或发行人，查看单券风险详情。</p></div>
-            </div>
-            <div class="pill-row" style="margin-top:26px;">
-              <span class="soft-pill">Expanding Window</span><span class="soft-pill">XGBoost Hazard</span><span class="soft-pill">未来6/12/18/24个月</span><span class="soft-pill">Top-k 风险捕获</span>
-            </div>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    col1, col2, col3 = st.columns([1.6, 1, 1.6])
-    with col2:
-        if st.button("Continue", use_container_width=True):
-            st.session_state["entered_app"] = True
-            st.rerun()
-
-# =============================================================================
-# 7. 主入口
-# =============================================================================
-
-def main() -> None:
-    inject_css()
-
-    if "entered_app" not in st.session_state:
-        st.session_state["entered_app"] = False
-
-    if not st.session_state["entered_app"]:
-        render_cover_page()
-        return
-
-    page, uploaded_file, explicit_path = sidebar_controls()
-    pred_df, status = read_prediction_file(uploaded_file=uploaded_file, explicit_path=explicit_path)
-    metrics_df = default_fold_metrics()
-
-    with st.sidebar:
-        st.markdown("---")
-        if st.button("返回封面", use_container_width=True):
-            st.session_state["entered_app"] = False
-            st.rerun()
-
-    if page == "首页总览":
-        render_home(pred_df, metrics_df, status)
-    elif page == "验证结果":
-        render_validation(metrics_df)
-    elif page == "高风险预测":
-        render_predictions(pred_df)
-    elif page == "单券查询":
-        render_bond_query(pred_df)
-    elif page == "模型说明":
-        render_model_note(metrics_df)
-    elif page == "数据状态":
-        render_data_status(pred_df, status)
-
-
-if __name__ == "__main__":
-    main()
+            invalid_tokens = ["", "—", "-", "未知", "未知发行人", "Unknown", "unknown", "nan"
